@@ -70,7 +70,6 @@ public class OrderService {
 		order.setTotalAmount(Good);
 		
 		
-		
 		Order savedOrder = orderRepository.save(order);
 
 		

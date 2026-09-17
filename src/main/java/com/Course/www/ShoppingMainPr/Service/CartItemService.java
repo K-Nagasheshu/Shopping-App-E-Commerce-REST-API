@@ -61,7 +61,9 @@ public class CartItemService {
 		
 		hai.setPrice(finalamount);
 		
-		return cartItemRepository.save(hai);
+		CartItem savedItem = cartItemRepository.save(hai);
+		updateCartTotal(foundcart.get());
+		return savedItem;
 	}
 
 
@@ -113,8 +115,20 @@ public class CartItemService {
 			throw new UserNotFoundException("GIVEN PRODUCT ID IS NOT AVAILABLE"); // checking product
 		
 		cartItemRepository.deleteByCartCartIdAndProductProductId(hai,productid);
+		updateCartTotal(foundcart.get());
 	}
-
 	
+	private void updateCartTotal(Cart cart) {
 
+	    List<CartItem> foundcartitem = cartItemRepository.findByCartCartId(cart.getCartId());
+        
+	    int totalamount = 0;
+	    for (CartItem item :foundcartitem) {
+	    	totalamount = totalamount+item.getPrice();
+	    }
+	    cart.setFinalamount(totalamount);
+	    cart.setCartItem(foundcartitem);
+	    cartRepository.save(cart);
+	}
 }
+	
